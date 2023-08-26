@@ -17,7 +17,7 @@ import AmountInput from "./AmountInput";
 import { getNetworkName, truncateAddress } from "@/modules/utils";
 import JsonViewer from "./JsonViewer";
 
-interface FeePayerProps extends React.HTMLProps<HTMLDivElement> {}
+interface FeePayerProps extends React.HTMLProps<HTMLDivElement> { }
 
 const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
   const { network } = useWallet();
@@ -71,7 +71,7 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ serializedData: hexData }),
+        body: JSON.stringify({ serializedData: hexData, network: getNetworkName(network?.name) as string }),
       });
 
       const data = await response.json();
@@ -117,17 +117,25 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
       </button>
       {response ? (
         <>
-          <JsonViewer data={response} />
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={`https://explorer.aptoslabs.com/txn/${
-              response.hash
-            }?network=${getNetworkName(network?.name)}`}
-            style={{ color: "blue", textDecoration: "underline" }}
-          >
-            View in Explorer
-          </a>
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "1ch auto",
+            padding: "3ch",
+          }}>
+            <JsonViewer data={response} />
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`https://explorer.aptoslabs.com/txn/${response.hash
+                }?network=${getNetworkName(network?.name)}`}
+              style={{ color: "royalblue", textDecoration: "underline" }}
+            >
+              View in Explorer
+            </a>
+          </div>
         </>
       ) : (
         <></>

@@ -9,17 +9,18 @@ import {
   Types,
 } from "aptos";
 
-const provider = new Provider(process.env.NEXT_PUBLIC_NETWORK as Network);
 const feePayerAccount = new AptosAccount(
   HexString.ensure(process.env.WALLET_PK!).toUint8Array(),
 );
 
 interface RequestBody {
   serializedData: string;
+  network: string;
 }
 
 export const payFee = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { serializedData } = req.body as RequestBody;
+  const { serializedData, network } = req.body as RequestBody;
+  const provider = new Provider(network as Network);
   const { feePayerTxn, senderAuth } = deserializeData(serializedData);
   const response = await payForTx(
     provider,
