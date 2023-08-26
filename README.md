@@ -14,12 +14,17 @@ This is not meant to be a particularly secure example- you will likely want to c
 ## The process
 
 1. The user signs off on the transaction. Currently only Petra wallet is supported because it is the only wallet with the ability to sign a multi agent transaction.
-
 2. The data is serialized into a BCS-serialized hex string and sent to the API endpoint
-
 3. The serverless API (in `pages/api/pay-fee.ts`) does the following:
-  - Receives the hex string
-  - Deserializes it into the raw fee payer transaction and the sender account authenticator, which is its public key and the signed transaction
-  - Uses the server-side wallet to sign the raw fee payer transaction to create the fee payer account authenticator
-  - Combines the two account authenticators and the raw transaction and submits it to the network
-  - Waits for the response and prints it out as JSON data
+
+    - Receives the hex string
+
+    - Deserializes it into the raw fee payer transaction and the sender account authenticator, which is its public key and the signed transaction
+
+    - Uses the server-side wallet to sign the raw fee payer transaction to create the fee payer account authenticator
+
+    - Combines the two account authenticators and the raw transaction and submits it to the network
+
+    - Waits for the response and prints it out as JSON data
+
+You can view an example deployment [here](https://fee-payer.vercel.app/)
