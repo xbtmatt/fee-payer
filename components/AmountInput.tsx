@@ -21,7 +21,7 @@ const AmountInput: React.FC<AmountInputProps> = ({ amount, setAmount }) => {
         type="number"
         value={displayedValue}
         onChange={handleInputChange}
-        step="1"
+        step=".1"
         style={{
           display: "flex",
           width: "7ch",

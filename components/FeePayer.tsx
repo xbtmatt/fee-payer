@@ -26,7 +26,7 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
   const [toAddress, setToAddress] = useState<string>(
     new AptosAccount().address().toString(),
   );
-  const [coinAmount, setCoinAmount] = useState<number>(100_000_000);
+  const [coinAmount, setCoinAmount] = useState<number>(1_000_000); // 0.01 APT
   const { wallets, wallet, account } = useWallet();
   const provider = new Provider(getNetworkName(network?.name));
 
