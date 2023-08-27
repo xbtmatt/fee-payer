@@ -11,24 +11,38 @@ import {
   TxnBuilderTypes,
   Types,
 } from "aptos";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import AddressGenerator from "./AddressGenerator";
 import AmountInput from "./AmountInput";
 import { getNetworkName, truncateAddress } from "@/modules/utils";
 import JsonViewer from "./JsonViewer";
+import fundFeePayer from "@/modules/fund-fee-payer";
 
 interface FeePayerProps extends React.HTMLProps<HTMLDivElement> { }
 
 const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
-  const { network } = useWallet();
+  const { network: networkInfo } = useWallet();
+  const [networkName, setNetworkName] = useState<string>("testnet");
+  const [provider, setProvider] = useState<Provider>(new Provider(Network.TESTNET));
+  const [postRender, setPostRender] = useState<boolean>(false);
 
   const [response, setResponse] = useState<Types.UserTransaction>();
-  const [toAddress, setToAddress] = useState<string>(
-    new AptosAccount().address().toString(),
-  );
+  const [toAddress, setToAddress] = useState<string>("");
   const [coinAmount, setCoinAmount] = useState<number>(1_000_000); // 0.01 APT
   const { wallets, wallet, account } = useWallet();
-  const provider = new Provider(getNetworkName(network?.name));
+
+  useEffect(() => {
+    setPostRender(true);
+  }, []);
+
+  useEffect(() => {
+    if (networkInfo) {
+      let network = getNetworkName(networkInfo.name);
+      fundFeePayer(network, HexString.ensure(process.env.NEXT_PUBLIC_WALLET_ADDRESS!));
+      setNetworkName(network);
+      setProvider(new Provider(network));
+    }
+  }, [networkInfo]);
 
   const handleClick = async (to: HexString, amount: number) => {
     if (
@@ -71,7 +85,7 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ serializedData: hexData, network: getNetworkName(network?.name) as string }),
+        body: JSON.stringify({ serializedData: hexData, network: networkName }),
       });
 
       const data = await response.json();
@@ -89,7 +103,7 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
           margin: "1.5ch auto",
         }}
       >
-        {`Network: ${getNetworkName(network?.name).toUpperCase()}`}
+        {`Network: ${networkName.toUpperCase()}`}
       </h3>
       <AddressGenerator address={toAddress} setAddress={setToAddress} />
       <AmountInput amount={coinAmount} setAmount={setCoinAmount} />
@@ -130,7 +144,7 @@ const FeePayer: React.FC<FeePayerProps> = ({ ...divProps }) => {
               target="_blank"
               rel="noopener noreferrer"
               href={`https://explorer.aptoslabs.com/txn/${response.hash
-                }?network=${getNetworkName(network?.name)}`}
+                }?network=${networkName}`}
               style={{ color: "royalblue", textDecoration: "underline" }}
             >
               View in Explorer

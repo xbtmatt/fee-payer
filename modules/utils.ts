@@ -1,8 +1,8 @@
 import { NetworkName } from "@aptos-labs/wallet-adapter-core";
 import { HexString, Network } from "aptos";
 
-export function getNetworkName(networkName?: NetworkName): Network {
-  switch (networkName) {
+export function getNetworkName(network?: NetworkName): Network {
+  switch (network?.toLowerCase()) {
     case NetworkName.Mainnet:
       return Network.MAINNET;
     case NetworkName.Testnet:
