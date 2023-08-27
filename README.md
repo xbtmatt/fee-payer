@@ -3,7 +3,7 @@ A dapp example of using a sponsored transaction on the Aptos blockchain.
 
 ## Explanation
 
-This dapp example demonstrates how to facilitate a sponsored transaction in a client/server environment, where the server has a server-side wallet that pays the gas fees for a simple transaction (APT coin transfer to a random address).
+This dapp example demonstrates how to facilitate a sponsored transaction in a client/server environment, where the server has a "server-side" (referred to as server-side here although technically this is a serverless endpoint) wallet that pays the gas fees for a simple transaction (APT coin transfer to a random address).
 
 The wallet private key is stored in an environment variable, either in `.env.local` as `WALLET_PK` in a local environment, or in staging or production, you can store it in Vercel's hidden environment variables.
 
